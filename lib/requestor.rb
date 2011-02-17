@@ -11,22 +11,26 @@ class Requestor
     attr_reader :code
 
     def initialize(url)
-      @url = url
+      @url = url.sub(/[^\/]$/,'\0/') 
+      @names = []
       @code = []
     end
 
     def require(file)
       file += '.rb' unless file[/\.rb$/]
-      buffer = open(@url + file, 'UserAgent' => 'Ruby-Requestor v0.1').read
-      @code << buffer
+      unless @names.include? file then
+        @names << file 
+        @code << open(@url + file, 'UserAgent' => 'Ruby-Requestor v0.1').read
+      end
     end
     
   end
-  
+
   def self.read(url)  
-    filex = Filex.new(url.sub(/[^\/]$/,'\0/'))
-    yield(filex)
-    filex.code.join("\n")
+
+    @@filex = Filex.new(url)
+    yield(@@filex)
+    @@filex.code.join("\n")
   end
 
 end

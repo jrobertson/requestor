@@ -1,0 +1,37 @@
+#!/usr/bin/ruby
+
+# file: requestor.rb
+
+require 'open-uri'
+
+class Requestor
+
+  class Filex
+
+    attr_reader :names
+
+    def initialize()  @@names = []  end
+
+    def require(file)
+      file += '.rb' unless file[/\.rb$/]
+      @@names << file unless @@names.include? file
+    end
+    
+  end
+  
+  def self.read(url)  
+
+    filex = Filex.new()
+    yield(filex)
+    url.sub!(/[^\/]$/,'\0/')
+
+    code = []
+
+    code << filex.names.map do |file|
+      open(url + file, 'UserAgent' => 'Ruby-Requestor v0.1').read
+    end
+
+    code.join("\n")
+  end
+
+end
