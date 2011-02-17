@@ -4,11 +4,12 @@
 
 require 'open-uri'
 require 'net/http'
-require 'dynarex'
+require 'rexml/document'
 
 class Requestor
 
   class Filex
+    include REXML
 
     attr_reader :code
 
@@ -38,7 +39,7 @@ class Requestor
       
       if url.file_list? then
         @file_list = true
-        @dynarex = Dynarex.new(url) 
+        @doc = Document.new(open(url, 'UserAgent' => 'Ruby-REXML').read)  
       end
     end
 
@@ -46,7 +47,7 @@ class Requestor
 
       unless @names.include? file then
         if @file_list then
-          url = @dynarex.records[file][:body][:url]
+          url = XPath.first(@doc.root, "records/file[name='#{file}']/url/text()").to_s
         else
           file += '.rb' unless file[/\.rb$/]
           url = @url + file
