@@ -8,30 +8,29 @@ class Requestor
 
   class Filex
 
-    attr_reader :names
+    attr_reader :code
 
-    def initialize()  @@names = []  end
+    def initialize(url)
+      @url = url.sub(/[^\/]$/,'\0/') 
+      @names = []
+      @code = []
+    end
 
     def require(file)
       file += '.rb' unless file[/\.rb$/]
-      @@names << file unless @@names.include? file
+      unless @names.include? file then
+        @names << file 
+        @code << open(@url + file, 'UserAgent' => 'Ruby-Requestor v0.1').read
+      end
     end
     
   end
-  
+
   def self.read(url)  
 
-    filex = Filex.new()
-    yield(filex)
-    url.sub!(/[^\/]$/,'\0/')
-
-    code = []
-
-    code << filex.names.map do |file|
-      open(url + file, 'UserAgent' => 'Ruby-Requestor v0.1').read
-    end
-
-    code.join("\n")
+    @@filex = Filex.new(url)
+    yield(@@filex)
+    @@filex.code.join("\n")
   end
 
 end
