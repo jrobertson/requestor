@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 
 # file: requestor.rb
 
@@ -28,7 +28,7 @@ class Requestor
         end
 
         if code == '200' then
-          buffer = open(url, 'UserAgent' => 'Ruby-Requestor').read
+          buffer = open(url, 'UserAgent' => 'Ruby-Requestor'){|f| f.read}
           @file_list = true if buffer[/#{pattern}/i]
         end
     
@@ -39,7 +39,7 @@ class Requestor
       
       if url.file_list? then
         @file_list = true
-        @doc = Document.new(open(url, 'UserAgent' => 'Ruby-REXML').read)  
+        @doc = Document.new(open(url, 'UserAgent' => 'Ruby-REXML'){|f| f.read})  
       end
     end
 
@@ -53,7 +53,7 @@ class Requestor
           url = @url + file
         end
         @names << file 
-        @code << open(url, 'UserAgent' => 'Ruby-Requestor v0.1').read
+        @code << open(url, 'UserAgent' => 'Ruby-Requestor'){|f| f.read}
       end
     end
     

@@ -9,7 +9,7 @@ require 'rexml/document'
 class Requestor
 
   class Filex
-    include REXML
+    #include REXML
 
     attr_reader :code
 
@@ -39,7 +39,7 @@ class Requestor
       
       if url.file_list? then
         @file_list = true
-        @doc = Document.new(open(url, 'UserAgent' => 'Ruby-REXML'){|f| f.read})  
+        @doc = REXML::Document.new(open(url, 'UserAgent' => 'Ruby-REXML').read)  
       end
     end
 
@@ -47,7 +47,8 @@ class Requestor
 
       unless @names.include? file then
         if @file_list then
-          url = XPath.first(@doc.root, "records/file[name='#{file}']/url/text()").to_s
+          url = REXML::XPath.first(@doc.root, \
+                                "records/file[name='#{file}']/url/text()").to_s
         else
           file += '.rb' unless file[/\.rb$/]
           url = @url + file
