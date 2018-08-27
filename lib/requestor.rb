@@ -3,68 +3,39 @@
 # file: requestor.rb
 
 require 'open-uri'
-require 'net/http'
-require 'rexml/document'
+
 
 class Requestor
 
-  class Filex
-    #include REXML
+  class RequireX
 
-    attr_reader :code
+    def initialize(url, debug=false)
 
-    def initialize(url) 
-      @url = url.sub(/[^\/]$/,'\0/') 
-      @file_list = false
-
-      def url.file_list?()
-        pattern = "<type>ruby_files</type>"
-
-        @file_list = false
-      
-        url = URI.parse(self)
-        code = Net::HTTP.start(url.host, url.port) do |http| 
-          http.head(url.request_uri).code 
-        end
-
-        if code == '200' then
-          buffer = open(url, 'UserAgent' => 'Ruby-Requestor'){|f| f.read}
-          @file_list = true if buffer[/#{pattern}/i]
-        end
-    
-      end
-
-      @names = []
+      @url = url.sub(/\/$/,'\0') 
       @code = []
-      
-      if url.file_list? then
-        @file_list = true
-        @doc = REXML::Document.new(open(url, 'UserAgent' => 'Ruby-REXML').read)  
-      end
+      @debug = debug
+
     end
 
-    def require(file)
-
-      unless @names.include? file then
-        if @file_list then
-          url = REXML::XPath.first(@doc.root, \
-                                "records/file[name='#{file}']/url/text()").to_s
-        else
-          file += '.rb' unless file[/\.rb$/]
-          url = @url + file
-        end
-        @names << file 
-        @code << open(url, 'UserAgent' => 'Ruby-Requestor'){|f| f.read}
-      end
+    def code()
+      @code.join("\n\n")
     end
-    
+
+    def require(name)
+
+      url = "%s/%s.rb" % [@url, name]
+      puts 'RequireX url: ' + url.inspect if @debug
+      @code << open(url, 'UserAgent' => 'Ruby-Requestor').read
+
+    end
   end
 
-  def self.read(url)  
+  def self.read(url, debug: false)
+    
+    req = RequireX.new(url.sub(/^(?!http)/,'http://'), debug)
+    yield(req)
+    req.code
 
-    @@filex = Filex.new(url)
-    yield(@@filex)
-    @@filex.code.join("\n")
   end
 
 end
