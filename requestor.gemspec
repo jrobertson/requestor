@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'requestor'
-  s.version = '0.2.0'
+  s.version = '0.2.1'
   s.summary = 'Reads a gem (under development) from an HTTP location. ' + 
       'Ideal for working on a gem in the development environment.'
     s.authors = ['James Robertson']

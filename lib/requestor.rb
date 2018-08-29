@@ -23,7 +23,7 @@ class Requestor
 
     def require(name)
 
-      url = "%s/%s.rb" % [@url, name]
+      url = "%s/%s" % [@url, name.sub(/\.rb$|$/,'.rb')]
       puts 'RequireX url: ' + url.inspect if @debug
       @code << open(url, 'UserAgent' => 'Ruby-Requestor').read
 
