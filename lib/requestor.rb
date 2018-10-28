@@ -2,7 +2,7 @@
 
 # file: requestor.rb
 
-require 'open-uri'
+require 'rxfhelper'
 
 
 class Requestor
@@ -25,14 +25,14 @@ class Requestor
 
       url = "%s/%s" % [@url, name.sub(/\.rb$|$/,'.rb')]
       puts 'RequireX url: ' + url.inspect if @debug
-      @code << open(url, 'UserAgent' => 'Ruby-Requestor').read
+      @code << RXFHelper.read(url).first
 
     end
   end
 
   def self.read(url, debug: false)
     
-    req = RequireX.new(url.sub(/^(?!http)/,'http://'), debug)
+    req = RequireX.new(url.sub(/^(?!http|dfs)/,'http://'), debug)
     yield(req)
     req.code
 
