@@ -1,12 +1,13 @@
 Gem::Specification.new do |s|
   s.name = 'requestor'
-  s.version = '0.4.0'
-  s.summary = 'Reads a gem (in the development environment) from an ' +
+  s.version = '0.4.1'
+  s.summary = 'Reads a gem (source code) from an ' +
       'HTTP location. Ideal for working on a gem in the ' +
       'development environment.'
     s.authors = ['James Robertson']
   s.files = Dir['lib/requestor.rb'] 
-  s.add_runtime_dependency('rxfhelper', '~> 1.3', '>=1.3.1')
+  # commented out the following lines to resolve circular dependency
+  #s.add_runtime_dependency('rxfhelper', '~> 1.3', '>=1.3.1')
   s.signing_key = '../privatekeys/requestor.pem'
   s.cert_chain  = ['gem-public_cert.pem']
   s.license = 'MIT'
