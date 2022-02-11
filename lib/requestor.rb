@@ -11,7 +11,7 @@ class Requestor
 
     def initialize(url, debug=false)
 
-      @url = url.sub(/\/$/,'\0') 
+      @url = url.sub(/\/$/,'\0')
       @code = []
       @debug = debug
 
@@ -31,7 +31,7 @@ class Requestor
   end
 
   def self.read(url, debug: false)
-    
+
     req = RequireX.new(url.sub(/^(?!http|dfs)/,'http://'), debug)
     yield(req)
     req.code
