@@ -2,7 +2,7 @@
 
 # file: requestor.rb
 
-require 'rxfhelper'
+require 'rxfreader'
 
 
 class Requestor
@@ -25,7 +25,7 @@ class Requestor
 
       url = "%s/%s" % [@url, name.sub(/\.rb$|$/,'.rb')]
       puts 'RequireX url: ' + url.inspect if @debug
-      @code << RXFHelper.read(url).first
+      @code << RXFReader.read(url).first
 
     end
   end
